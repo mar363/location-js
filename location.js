@@ -1,6 +1,4 @@
-(function () {
-  emailjs.init("LBjNKfoFIJUrwaqXy"); // 👈 Replace with your actual EmailJS public key
-})();
+
 
 window.onload = function () {
   if (navigator.geolocation) {
